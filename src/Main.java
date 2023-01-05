@@ -127,7 +127,7 @@ public class Main {
 
             Point2D punto = new Point2D.Double(Double.parseDouble(vecino[1]), Double.parseDouble(vecino[2]));
 
-            if(!caminosVisitados.contains(punto)) {
+            if(!seVisitoCamino(punto)) {
 
                 sucesores.add(punto);
 
@@ -152,13 +152,6 @@ public class Main {
 
                 Point2D punto = frontera.get(i);
 
-                if(caminosVisitados.contains(punto)) {
-
-                    frontera.remove(i);
-                    continue;
-
-                }
-
                 if(heuristica(punto, destinoFinal) + heuristica(edoActual, punto) + heuristicaRecorrida < heuristica(puntoMenor, destinoFinal) + heuristica(edoActual, puntoMenor) + heuristicaRecorrida) {
 
                     indice = i;
@@ -179,25 +172,57 @@ public class Main {
 
     private static ArrayList<Point2D> agregarSucesores(ArrayList<Point2D> sucesores, ArrayList<Point2D> frontera) {
 
+        ArrayList<Point2D> fronteraNueva = new ArrayList<>();
+
         for(Point2D sucesor : sucesores) {
 
             if (sucesor == null) {
                 continue;
             }
 
-            if (frontera.contains(sucesor)) {
+            if(estaFrontera(sucesor, frontera)) {
                 continue;
             }
 
-            if (caminosVisitados.contains(sucesor)) {
+            if(seVisitoCamino(sucesor)) {
                 continue;
             }
 
-            frontera.add(sucesor);
+            fronteraNueva.add(sucesor);
 
         }
 
-        return frontera;
+        return fronteraNueva;
+
+    }
+
+    private static boolean seVisitoCamino(Point2D sucesor) {
+
+        for(Point2D punto : caminosVisitados) {
+
+            if(punto.getX() == sucesor.getX() && punto.getY() == sucesor.getY()) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+    private static boolean estaFrontera(Point2D sucesor, ArrayList<Point2D> frontera) {
+
+        for (Point2D punto : frontera) {
+
+            if (punto.getX() == sucesor.getX() && punto.getY() == sucesor.getY()) {
+                return true;
+            }
+
+        }
+
+        return false;
 
     }
 
