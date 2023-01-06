@@ -63,9 +63,19 @@ public class Main {
 
         ArrayList<Point2D> sucesores = obtenerSucesores(edoActual);
 
-        frontera = agregarSucesores(sucesores, frontera);
+        agregarSucesores(sucesores, frontera);
 
         frontera = ordenarSucesores(frontera, edoActual);
+
+        /*
+        if(sucesores.size() != 0) {
+
+            sucesores = ordenarSucesores(sucesores, edoActual);
+
+            frontera.addAll(0, agregarSucesores2(sucesores, frontera));
+
+        }
+         */
 
         aEstrella(frontera);
 
@@ -154,6 +164,7 @@ public class Main {
 
                 if(heuristica(punto, destinoFinal) + heuristica(edoActual, punto) + heuristicaRecorrida < heuristica(puntoMenor, destinoFinal) + heuristica(edoActual, puntoMenor) + heuristicaRecorrida) {
 
+                    puntoMenor = frontera.get(i);
                     indice = i;
 
                 }
@@ -170,9 +181,7 @@ public class Main {
 
     }
 
-    private static ArrayList<Point2D> agregarSucesores(ArrayList<Point2D> sucesores, ArrayList<Point2D> frontera) {
-
-        ArrayList<Point2D> fronteraNueva = new ArrayList<>();
+    private static void agregarSucesores(ArrayList<Point2D> sucesores, ArrayList<Point2D> frontera) {
 
         for(Point2D sucesor : sucesores) {
 
@@ -188,11 +197,35 @@ public class Main {
                 continue;
             }
 
-            fronteraNueva.add(sucesor);
+            frontera.add(sucesor);
 
         }
 
-        return fronteraNueva;
+    }
+
+    private static ArrayList<Point2D> agregarSucesores2(ArrayList<Point2D> sucesores, ArrayList<Point2D> frontera) {
+
+        ArrayList<Point2D> sucesoresAgregados = new ArrayList<>();
+
+        for(Point2D sucesor : sucesores) {
+
+            if (sucesor == null) {
+                continue;
+            }
+
+            if(estaFrontera(sucesor, frontera)) {
+                continue;
+            }
+
+            if(seVisitoCamino(sucesor)) {
+                continue;
+            }
+
+            sucesoresAgregados.add(sucesor);
+
+        }
+
+        return sucesoresAgregados;
 
     }
 
@@ -230,7 +263,7 @@ public class Main {
 
         for (Point2D punto : caminosVisitados) {
 
-            System.out.println(punto);
+            System.out.println("(" + punto.getX() + "," + punto.getY() +"),");
 
         }
 
